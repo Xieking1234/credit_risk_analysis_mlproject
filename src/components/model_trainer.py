@@ -23,20 +23,30 @@ class ModelTrainer:
             X_train, y_train = train_array[:, :-1], train_array[:, -1]
             X_test, y_test = test_array[:, :-1], test_array[:, -1]
 
+            # 1. Initialize base XGBoost model
             model = XGBClassifier(
-                n_estimators=500,
-                learning_rate=0.1,
-                max_depth=3,
-                subsample=0.8,
-                colsample_bytree=0.8,
-                gamma=0,
-                reg_lambda=1,
+                n_estimators=500,        # Number of boosting rounds
+
+                learning_rate=0.1,       # Step size shrinkage to prevent overfitting
+
+                max_depth=3,             # Maximum depth of a tree
+
+                subsample=0.8,           # Subsample ratio of the training data
+
+                colsample_bytree=0.8,    # Subsample ratio of features for each tree
+
+                gamma=0,                 # Minimum loss reduction required to make a further partition
+
+                reg_lambda=1, 
                 objective='multi:softmax',
+                device='cuda',
                 random_state=42
             )
 
+            # 2. Fit the model to the training data
             logging.info("Training XGBoost model...")
             model.fit(X_train, y_train)
+        
 
             y_pred = model.predict(X_test)
             acc = accuracy_score(y_test, y_pred)

@@ -26,7 +26,8 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info("Entered the data ingestion method or component")
         try:
-            # Pointing to your actual dataset path using raw string
+            # Pointing to your actual dataset path using raw string 
+            #if you have a databases api or an other api to the data source you can replace the file_path to that api and make a get request to get that data
             file_path = r'C:\Users\Jarvis\Desktop\nb\data\IterativeImputer_credit.csv'
             df = pd.read_csv(file_path)
             logging.info('Read the dataset as dataframe')
@@ -54,13 +55,4 @@ class DataIngestion:
             )
         except Exception as e:
             raise CustomException(e, sys)
-        
-if __name__ == "__main__":
-    obj = DataIngestion()
-    train_data, test_data = obj.initiate_data_ingestion()
 
-    data_transformation = DataTransformation()
-    train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, test_data)
-
-    modeltrainer = ModelTrainer()
-    print(modeltrainer.initiate_model_trainer(train_arr, test_arr))

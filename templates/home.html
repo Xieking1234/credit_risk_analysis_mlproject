@@ -1,0 +1,187 @@
+<html>
+<head>
+    <title>Loan Status Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .login { max-width: 800px; background: white; padding: 30px; margin: auto; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn { background: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
+        .btn:hover { background: #0056b3; }
+        h2 { color: #333; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h1>Loan Risk & Status Prediction</h1>
+   
+        <form action="{{ url_for('predict_datapoint')}}" method="post">
+            <legend><h3>Enter All Loan & Borrower Details</h3></legend>
+
+            <!-- Basic Loan Details -->
+            <h4>Loan Details</h4>
+            <div class="form-group"><label>Loan Amount</label><input class="form-control" type="number" step="any" name="loan_amnt" required /></div>
+            <div class="form-group"><label>Funded Amount</label><input class="form-control" type="number" step="any" name="funded_amnt" required /></div>
+            <div class="form-group"><label>Funded Amount Investor</label><input class="form-control" type="number" step="any" name="funded_amnt_inv" required /></div>
+            <div class="form-group">
+                <label>Term</label>
+                <select class="form-control" name="term" required>
+                    <option value=" 36 months">36 months</option>
+                    <option value=" 60 months">60 months</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Interest Rate (%)</label><input class="form-control" type="number" step="any" name="int_rate" required /></div>
+            <div class="form-group"><label>Installment</label><input class="form-control" type="number" step="any" name="installment" required /></div>
+            <div class="form-group">
+                <label>Sub Grade</label>
+                <select class="form-control" name="sub_grade" required>
+                    <option value="" disabled selected>Select Sub Grade</option>
+                    
+                    <optgroup label="Grade A">
+                        <option value="A1">A1</option>
+                        <option value="A2">A2</option>
+                        <option value="A3">A3</option>
+                        <option value="A4">A4</option>
+                        <option value="A5">A5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade B">
+                        <option value="B1">B1</option>
+                        <option value="B2">B2</option>
+                        <option value="B3">B3</option>
+                        <option value="B4">B4</option>
+                        <option value="B5">B5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade C">
+                        <option value="C1">C1</option>
+                        <option value="C2">C2</option>
+                        <option value="C3">C3</option>
+                        <option value="C4">C4</option>
+                        <option value="C5">C5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade D">
+                        <option value="D1">D1</option>
+                        <option value="D2">D2</option>
+                        <option value="D3">D3</option>
+                        <option value="D4">D4</option>
+                        <option value="D5">D5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade E">
+                        <option value="E1">E1</option>
+                        <option value="E2">E2</option>
+                        <option value="E3">E3</option>
+                        <option value="E4">E4</option>
+                        <option value="E5">E5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade F">
+                        <option value="F1">F1</option>
+                        <option value="F2">F2</option>
+                        <option value="F3">F3</option>
+                        <option value="F4">F4</option>
+                        <option value="F5">F5</option>
+                    </optgroup>
+                    
+                    <optgroup label="Grade G">
+                        <option value="G1">G1</option>
+                        <option value="G2">G2</option>
+                        <option value="G3">G3</option>
+                        <option value="G4">G4</option>
+                        <option value="G5">G5</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Initial List Status</label>
+                <select class="form-control" name="initial_list_status" required>
+                    <option value="f">f</option>
+                    <option value="w">w</option>
+                </select>
+            </div>
+
+            <!-- Financials & Income -->
+            <h4>Financials</h4>
+            <div class="form-group"><label>Annual Income</label><input class="form-control" type="number" step="any" name="annual_inc" required /></div>
+            <div class="form-group">
+                <label>Verification Status</label>
+                <select class="form-control" name="verification_status" required>
+                    <option value="Not Verified">Not Verified</option>
+                    <option value="Source Verified">Source Verified</option>
+                    <option value="Verified">Verified</option>
+                </select>
+            </div>
+            <div class="form-group"><label>DTI (Debt-to-Income Ratio)</label><input class="form-control" type="number" step="any" name="dti" required /></div>
+            <div class="form-group"><label>Revolving Balance</label><input class="form-control" type="number" step="any" name="revol_bal" required /></div>
+            <div class="form-group"><label>Revolving Utilities (%)</label><input class="form-control" type="number" step="any" name="revol_util" required /></div>
+            <div class="form-group"><label>Total Revolving High Limit</label><input class="form-control" type="number" step="any" name="total_rev_hi_lim" required /></div>
+
+            <!-- Credit History -->
+            <h4>Credit History</h4>
+            <div class="form-group"><label>Delinquencies in past 2 years</label><input class="form-control" type="number" step="any" name="delinq_2yrs" required /></div>
+            <div class="form-group"><label>Inquiries in last 6 months</label><input class="form-control" type="number" step="any" name="inq_last_6mths" required /></div>
+            <div class="form-group"><label>Open Accounts</label><input class="form-control" type="number" step="any" name="open_acc" required /></div>
+            <div class="form-group"><label>Public Records</label><input class="form-control" type="number" step="any" name="pub_rec" required /></div>
+            <div class="form-group"><label>Total Accounts</label><input class="form-control" type="number" step="any" name="total_acc" required /></div>
+            <div class="form-group"><label>Collections 12 Months Ex Med</label><input class="form-control" type="number" step="any" name="collections_12_mths_ex_med" required /></div>
+            <div class="form-group"><label>Total Collection Amount</label><input class="form-control" type="number" step="any" name="tot_coll_amt" required /></div>
+            <div class="form-group"><label>Total Current Balance</label><input class="form-control" type="number" step="any" name="tot_cur_bal" required /></div>
+
+            <!-- Payment & Performance Metrics -->
+            <h4>Payment Tracking</h4>
+            <div class="form-group"><label>Outstanding Principal</label><input class="form-control" type="number" step="any" name="out_prncp" required /></div>
+            <div class="form-group"><label>Outstanding Principal Investor</label><input class="form-control" type="number" step="any" name="out_prncp_inv" required /></div>
+            <div class="form-group"><label>Total Payment</label><input class="form-control" type="number" step="any" name="total_pymnt" required /></div>
+            <div class="form-group"><label>Total Payment Investor</label><input class="form-control" type="number" step="any" name="total_pymnt_inv" required /></div>
+            <div class="form-group"><label>Total Received Principal</label><input class="form-control" type="number" step="any" name="total_rec_prncp" required /></div>
+            <div class="form-group"><label>Total Received Interest</label><input class="form-control" type="number" step="any" name="total_rec_int" required /></div>
+            <div class="form-group"><label>Total Received Late Fee</label><input class="form-control" type="number" step="any" name="total_rec_late_fee" required /></div>
+            <div class="form-group"><label>Recoveries</label><input class="form-control" type="number" step="any" name="recoveries" required /></div>
+            <div class="form-group"><label>Collection Recovery Fee</label><input class="form-control" type="number" step="any" name="collection_recovery_fee" required /></div>
+            <div class="form-group"><label>Last Payment Amount</label><input class="form-control" type="number" step="any" name="last_pymnt_amnt" required /></div>
+
+            <!-- Home Ownership -->
+            <h4>Home Ownership</h4>
+            <div class="form-group">
+                <select class="form-control" name="home_ownership" required>
+                    <option value="RENT">RENT</option>
+                    <option value="MORTGAGE">MORTGAGE</option>
+                    <option value="OWN">OWN</option>
+                    <option value="ANY">ANY</option>
+                    <option value="NONE">NONE</option>
+                    <option value="OTHER">OTHER</option>
+                </select>
+            </div>
+
+            <!-- Purpose -->
+            <h4>Loan Purpose</h4>
+            <div class="form-group">
+                <select class="form-control" name="purpose" required>
+                    <option value="debt_consolidation">Debt Consolidation</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="car">Car</option>
+                    <option value="home_improvement">Home Improvement</option>
+                    <option value="major_purchase">Major Purchase</option>
+                    <option value="small_business">Small Business</option>
+                    <option value="medical">Medical</option>
+                    <option value="moving">Moving</option>
+                    <option value="vacation">Vacation</option>
+                    <option value="house">House</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="educational">Educational</option>
+                    <option value="renewable_energy">Renewable Energy</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <input class="btn" type="submit" value="Predict Loan Status" />
+            </div>
+        </form>
+
+        <h2>The Prediction is: {{results}}</h2>
+    </div>
+</body>
+</html>
