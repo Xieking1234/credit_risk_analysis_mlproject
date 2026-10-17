@@ -155,6 +155,8 @@ activemq-data/
 .venv
 env/
 venv/
+artifacts/
+*.zip
 ENV/
 env.bak/
 venv.bak/
@@ -219,5 +221,3 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Machine Learning Artifacts
-artifacts/
